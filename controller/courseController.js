@@ -1,43 +1,31 @@
-const { v4: uuidv4 } = require('uuid')
 const { createError } = require('../custom-error/error')
-const courseModel = require('../model/courseModel')
+const {Course} = require('../model/courseModel')
 
 module.exports.addCourse = async (req, res, next) => {
-  const { title, description, price, image, overview } = req.body
+  const { title, description, price, image, overview,videos,enrolled,duration,isPaid} = req.body
   try {
-    if (!(title && description && price && image && overview)) {
+    if (!(title && description && price && image && overview )) {
       next(createError(400, 'field required'))
     } else {
-      const checkCourse = await courseModel.findById({ id: courseId })
-      if (checkCourse) {
-        next(createError(400, 'course already exists'))
-      } else {
-        const course = new courseModel({
-          ...req.body,
-          userId: req.body.id,
-          courseId: uuidv4(),
+      
+        const course = new Course({
+         title,description,price,image,overview,videos,enrolled,duration,isPaid
+        
         })
-        course.save()
-        res.status(201).json({ message: 'Course created successfully' })
+      const savedCourse = await course.save();
+        res.status(200).json({message:'successfully saved course'})
       }
-    }
+     
   } catch (error) {
     next(error)
-  }
-}
-
+  } 
+} 
+ 
 // list courses
 module.exports.listCourses = async (req, res, next) => {
   try {
-    const course = await courseModel.find({ skip: 10, limit: 5 }, (err, results) =>
-    {
-      if(err){
-        res.status(404).json({ message: 'courses not found' })
-      }else{
-        res.status(200).json({ message: results})
-      }
-     })
-    res.status(200).json(course)
+    const courses =await Course.find();
+    res.status(200).json(courses)
   } catch (error) {
     next(error)
   }
@@ -54,7 +42,7 @@ module.exports.searchCourse = async (req, res, next) => {
     //i is case insensitive
     // regular expression for pattern matching string in queries
     //search job by titles
-    const search = await courseModel.find({
+    const search = await Course.find({
       title: { $regex: title, $options: 'i' },
     })
 
@@ -63,3 +51,34 @@ module.exports.searchCourse = async (req, res, next) => {
     next(error)
   }
 }
+
+module.exports.toggleStatus = async (req, res, next) => {
+  try {
+    if (!req.body.email) {
+      res.status(400).json({ message: "No valid email found" });
+    } else {
+      const user = await userModel.findOne({ email: req.body.email })
+      if (user.status == 'enabled') {
+        userModel.updateOne({ email: req.body.email }, { status: 'disabled' }, (error, result) => {
+          if (error) {
+            res.status(400).json({ message: 'failed to update' })
+          } else {
+            res.status(200).json({ message: 'user has been banned' })
+          }
+        });
+      }
+      else {
+        userModel.updateOne({ email: req.body.email }, { status: 'enabled' }, (error, result) => {
+          if (error) {
+            res.status(400).json({ message: 'failed to update' })
+          } else {
+            res.status(200).json({ message: 'user ban has been lifted' })
+          }
+        });
+      }
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+

@@ -1,7 +1,6 @@
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
-const cookieParser = require('cookie-parser')
 const { success, error } = require('consola')
 const bodyParser = require('body-parser')
 const myRoute  = require('./route/route')
@@ -13,7 +12,6 @@ const app = express()
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(cookieParser())
 
 // error handling
 app.use((err, req, res, next) => {
@@ -25,10 +23,10 @@ app.use((err, req, res, next) => {
     message,
   })
 })
-
+const db = "mongodb+srv://muyiwah457:pass@cluster0.kr7soid.mongodb.net/?retryWrites=true&w=majority";
 //connect to mongoDB
 mongoose
-  .connect(process.env.LOCAL_DB, {
+  .connect(db, { 
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

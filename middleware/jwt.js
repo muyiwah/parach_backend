@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 
-module.exports.userId = async (req, res, next) => {
+module.exports.jwtVerify = async (req, res, next) => {
     try {
         const token = req.header('Authorization').split(' ')[1]
         if(!token){

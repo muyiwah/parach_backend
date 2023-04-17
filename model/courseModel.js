@@ -1,12 +1,9 @@
 const mongoose = require('mongoose')
 
-const courseModel  =  new mongoose.Schema
+const courseSchema  =  new mongoose.Schema
 (
-    {courseId: {
-        type: String,
-        unique: true,
-        required: true
-    },
+    {
+       
         title:{
             type: String,
         },
@@ -20,14 +17,28 @@ const courseModel  =  new mongoose.Schema
             type: String,
         },
         overview:{
-            type: [String],
+            type: String,
         },
-        created_at : {
+        videos:  [{}],   
+        isPaid: {
+            type: Boolean,
+            default: false
+                    },
+        enrolled: {
+            type: Number,
+            default: 0
+        },
+        // rate: { type: [] },
+        duration: { type: Number,
+        default:0 },
+        
+         created_at : {
             type: String,
             default: new Date
-        }
+        },
+       
     }
 )
-
-const course = mongoose.model('course', courseModel)
-module.exports = course;
+  
+const Course = mongoose.model('Course', courseSchema)
+module.exports = {Course,courseSchema};

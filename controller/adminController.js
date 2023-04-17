@@ -29,31 +29,133 @@ module.exports.adminRegister = async (req, res, next) => {
     next(error)
   }
 }
-//login admin
-module.exports.adminSignIn = async (req, res, next) => {
-  const { email } = req.body;
+
+module.exports.superAdminRegister = async (req, res, next) => {
+  const { fullName, email, password, phone, location } = req.body
   try {
-    const admin = await userModel.findOne({ email: email })
-    if (!admin) {
-      next(createError(404, 'admin not found'))
+    if (!(fullName && email && password && phone && location)) {
+      next(createError(400, 'fields input required '))
     } else {
-      const checkPassword = await bcrypt.compare(req.body.password, admin.password)
-      const token = jwt.sign({ id: admin.id, role: admin.role }, process.env.TOKEN_SECRET, {
-        expiresIn: '15m',
-      })
-      //exclude password
-      const { password, ...other } = admin._doc
-      if (checkPassword) {
-        res
-          .status(200)
-          .cookie('token', token, { httpOnly: true, secure: true })
-          .json(other)
+      const checkIfAdminExists = await userModel.findOne({ email: email })
+      if (checkIfAdminExists) {
+        next(createError(404, 'admin already exists'))
+      } else {
+        const salt = await bcrypt.genSalt(10)
+        const hash = await bcrypt.hash(password, salt)
+
+        const admin = new userModel({
+          ...req.body,
+          role: 'superAdmin',
+          password: hash,
+        })
+        await admin.save()
+        res.status(201).json({ message: 'admin registration successfully' })
       }
     }
   } catch (error) {
     next(error)
   }
 }
+//login admin
+
+
+
+module.exports.superAdminSignin = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!(email && password)) {
+      res.status(400).send("All input is required");
+    } else {
+      const user = await userModel.findOne({ email: email });
+      if (user && user.role === "superAdmin") {
+        const correctPassword = await bcrypt.compare(password, user.password);
+        const token = await jwt.sign(
+          {
+            id: user.id,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+          },
+          process.env.JWT_SECRET,
+          { expiresIn: "12h" },
+        );
+        if (correctPassword) {
+          if (user.status == "disabled") {
+            res
+              .status(404)
+              .json({ message: "user has been disabled, contact admin" });
+          } else {
+            const { password, ...other } = user._doc;
+            res.status(200).json({
+              message: "success",
+              data: {
+                token: token,
+                data: other,
+              },
+              status: "200",
+            });
+          }
+        } else {
+          res.status(404).json({ message: "invalid email or password" });
+        }
+      } else {
+        res.status(404).json({ message: "user not found" });
+      }
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+
+module.exports.adminSignin = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!(email && password)) {
+      res.status(400).send("All input is required");
+    } else {
+      const user = await userModel.findOne({ email: email });
+      if (user && user.role === "admin") {
+        const correctPassword = await bcrypt.compare(password, user.password);
+        const token = await jwt.sign(
+          {
+            id: user.id,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+          },
+          process.env.JWT_SECRET,
+          { expiresIn: "12h" },
+        );
+        if (correctPassword) {
+          if (user.status == "disabled") {
+            res
+              .status(404)
+              .json({ message: "user has been disabled, contact admin" });
+          } else {
+            const { password, ...other } = user._doc;
+            res.status(200).json({
+              message: "success",
+              data: {
+                token: token,
+                data: other,
+              },
+              status: "200",
+            });
+          }
+        } else {
+          res.status(404).json({ message: "invalid email or password" });
+        }
+      } else {
+        res.status(404).json({ message: "user not found" });
+      }
+    }
+  } catch (error) {
+    next(error);
+  }
+};
 //update admin
 module.exports.updateAdmin = async(req, res, next)=> {
     const { email } = req.body
@@ -102,3 +204,30 @@ module.exports.deleteUser = async (req, res, next) => {
         next(error)
     }
 }
+
+module.exports.listUsers = async (req, res, next) => {
+  try {
+    const users = await userModel.find().where("role").equals("user");
+    res.status(200).json(users);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports.listAdmins = async (req, res, next) => {
+  try {
+    const users = await userModel.find().where("role").equals("admin");
+    res.status(200).json(users);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.listSuperAdmins = async (req, res, next) => {
+  try {
+    const users = await userModel.find().where("role").equals("superAdmin");
+    res.status(200).json(users);
+  } catch (error) {
+    next(error);
+  }
+};

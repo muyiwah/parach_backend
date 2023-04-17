@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const { courseSchema } = require('./courseModel');
 
 const userModel = new mongoose.Schema
 (
@@ -18,11 +19,29 @@ const userModel = new mongoose.Schema
             type: String,
             required: true
         },
-        created_at:{
+        isVerified: {
+            type: Boolean, 
+        default:false},
+        status: {
+            type: String,
+            default: 'enabled',
+            enum: ['enabled', 'disabled' ]
+        },
+        role: {
+            type: String,
+            default: 'user',
+            enum: ['user', 'admin', 'superAdmin' ]
+        },
+        enabled: {
+            type: Boolean,
+        default:true},
+        cart: [], 
+        paidCourses:[],
+        created_at:{ 
             type: String,
             default: new Date
-        }
-    },
+        },
+    }, 
 )
 const user = mongoose.model('user', userModel)
-module.exports = user;
+module.exports = user;  

@@ -11,4 +11,4 @@ const paidCoursesModel = new mongoose.Schema({
 })
 
 const paidCourse = mongoose.model('paidCourse', paidCoursesModel)
-module.exports = paidCourse;
+module.exports = paidCourse; 
