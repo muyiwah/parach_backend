@@ -26,7 +26,7 @@ app.use((err, req, res, next) => {
 const db = "mongodb+srv://muyiwah457:pass@cluster0.kr7soid.mongodb.net/?retryWrites=true&w=majority";
 //connect to mongoDB
 mongoose
-  .connect(db, { 
+  .connect(process.env.LOCAL_DB, {   
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -37,10 +37,11 @@ mongoose
 
 // api routes
 app.use('/api/v1', myRoute)
-
+ 
 // create server
 port = process.env.PORT
 
-app.listen(port, () => {
+app.listen(7000, () => {
   success({ message: `server started on ${port}`, badge: true })
 })
+ 

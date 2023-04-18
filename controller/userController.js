@@ -46,14 +46,19 @@ module.exports.register = async (req, res, next) => {
 module.exports.signIn = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-  
-      const user = await userModel.findOne({ email: email });
+  console.log(email);console.log(password);
+    const user = await userModel.findOne({ email: email });
+    if(!user)return res.status(400).json({message:"user with email not found"})
+    const correctPassword = await bcrypt.compare(password, user.password);
       if (user) {
         const otp=(Math.floor( Math.random() * 10000) + 10000).toString().substring(1);
-        const subject = "verification";
-        const text = `you can verify your account with the otp ${otp}`;
-        if (user.isVerified == false) {sendEmail(email,otp,user._id,subject,text)
-          res.status(401).json({ message: "your account is not verified, an OTP has been sent to your email, please verify"})
+            const { ...other2 } = user._doc;
+            const subject = "verification";
+        const text = `you can verify your account with the otp ${otp}`; const otp2 = "1234";
+        if (user.isVerified == false && correctPassword) {sendEmail(email,otp2,user._id,subject,text)
+          res.status(419).json({ message: "your account is not verified, an OTP has been sent to your email, please verify",data: {
+           other2, 
+         },})
         } else {
           
 
@@ -64,10 +69,10 @@ module.exports.signIn = async (req, res, next) => {
               id: user.id,
               email: user.email,
               phoneNumber: user.phoneNumber,
-              role: user.role,
+              role: user.role, 
             },
             process.env.JWT_SECRET,
-            { expiresIn: "12h" },
+            { expiresIn: "12h" }, 
           );
           if (correctPassword) {
             const { password, ...other } = user._doc;
@@ -309,30 +314,32 @@ module.exports.forgotPassword = async (req, res, next) => {
 module.exports.verifyOtp = async (req, res, next) => {
   try {
     const {otp, id } = req.body;
+console.log(otp);
 console.log(id);
     const otpVerificationRecords = await otpVerification.findOne({ userId: id });
     console.log(otpVerificationRecords);
       if(!otpVerificationRecords) return res.status(400).json({message:"Account record doesn't eist or account is already verified. Please signup or login"})
-    if(otpVerificationRecords.length <=0){return res.status(400).json({message:"Account record doesn't eist or account is already verified. Please signup or login"})}
+    // if(otpVerificationRecords.length <=0){return res.status(400).json({message:"Account record doesn't eist or account is already verified. Please signup or login"})}
       const { expiresAt } = otpVerificationRecords;
       if (expiresAt < Date.now()) {
         await otpVerification.deleteOne({ userId:id })
       return  res.status(400).send("OTP has expired. Please request again");
       }
       const hashedOTP = otpVerificationRecords.otp;
-    const otpValid =await bcrypt.compare(otp, hashedOTP);
-      if (!otpValid) return res.status(400).send("invalid OTP");
+    // const otpValid =await bcrypt.compare(otp, hashedOTP);
+      if ( otpVerificationRecords.otp!==otp) return res.status(400).send("invalid OTP, request for a new OTP");
       await user.updateOne({ _id: id }, { isVerified: true });
       await otpVerification.deleteMany({ userId: id });
-      return  res.status(200).send(true);
+      return  res.status(200).send(true); 
 
-    
+     
     
 
 
    } catch (e) {
     
-    res.status(500).json({error: e.message})  }
+    res.status(500).json({ error: e.message })
+  }
 }
 
 
@@ -348,7 +355,8 @@ module.exports.resendOtp = async (req,res,next)=>{
     const otp2 = "1234"; const subject = "verification";
       const text = `you can verify your account with the otp ${otp}`;
     sendEmail(email, otp2, id, subject, text);
-    return res.status(200).send(true);
+    console.log('resent');
+    // return res.status(200).send(true);
 
     
     
@@ -365,7 +373,8 @@ module.exports.sendOtp = async (req,res,next)=>{
     const { email } = req.body;
 
    
-    const user =await userModel.findOne({ email });
+    const user = await userModel.findOne({ email });
+    if(!user)return res.status(400).send({message:'email not found, sign-up to continue'})
     const id = user.id;
     console.log(user);
     const otpVerificationRecords = await otpVerification.findOne({ userId: id });
