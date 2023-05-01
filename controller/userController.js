@@ -14,12 +14,10 @@ module.exports.register = async (req, res, next) => {
     console.log(req.bod);
     const { email, password, fullName, phone, address,cart } = req.body
     console.log(req.body);
-    if (!(email, password, fullName, phone,address)) 
+    if (!(email, password, fullName, phone)) 
      return res.status(400).json({message: 'all fields are required'})
-     if (phone.length!=11 ) 
-     return res.status(400).json({message: 'phone no not correct'})
-     if (address.length<11 ) 
-     return res.status(400).json({message: 'address too short, pls enter a more detailed address'})
+  
+     
       const checkUser = await userModel.findOne({ email: email })
       if (checkUser) { 
         res.status(400).json({message: "user already exists, please proceed to login"})
@@ -28,10 +26,10 @@ module.exports.register = async (req, res, next) => {
         const hash = await bcrypt.hash(password, salt)
         const user = new userModel({ email, password, fullName, phone, address,cart , password: hash })
         const otp=(Math.floor( Math.random() * 10000) + 10000).toString().substring(1);
-        const otp2 = "1234"; const savedUser=  await user.save()
+      const savedUser=  await user.save()
       const subject = "verification";
         const text = `you can verify your account with the otp ${otp}`;
-        sendEmail(email, otp2, savedUser._id, subject, text);
+        sendEmail(email, otp, savedUser._id, subject, text);
        
         
          res.status(200).json({ message: 'an OTP has been sent to your email, please use it to verify your account',user:savedUser })
@@ -54,8 +52,8 @@ module.exports.signIn = async (req, res, next) => {
         const otp=(Math.floor( Math.random() * 10000) + 10000).toString().substring(1);
             const { ...other2 } = user._doc;
             const subject = "verification";
-        const text = `you can verify your account with the otp ${otp}`; const otp2 = "1234";
-        if (user.isVerified == false && correctPassword) {sendEmail(email,otp2,user._id,subject,text)
+        const text = `you can verify your account with the otp ${otp}`; 
+        if (user.isVerified == false && correctPassword) {sendEmail(email,otp,user._id,subject,text)
           res.status(419).json({ message: "your account is not verified, an OTP has been sent to your email, please verify",data: {
            other2, 
          },})
@@ -301,8 +299,8 @@ module.exports.forgotPassword = async (req, res, next) => {
   const { email } = req.body;
   const user =await userModel.findOne({ email });
   if(!user) return  res.status(400).json({ message: 'no user account found, please signup to continue' })
-  // const otp=(Math.floor( Math.random() * 10000) + 10000).toString().substring(1);
-  const subject = "Password Reset";const otp="1234"
+  const otp=(Math.floor( Math.random() * 10000) + 10000).toString().substring(1);
+  const subject = "Password Reset";
   const text = `you can reset your account with the otp ${otp}`;
   sendEmail(email,otp,user._id,subject,text)
     res.status(401).json({ message: "An OTP has been sent to your email, please verify"})
@@ -352,9 +350,9 @@ module.exports.resendOtp = async (req,res,next)=>{
    
     if(otpVerificationRecords) { await otpVerification.deleteMany({ userId: id });}
     const otp=(Math.floor( Math.random() * 10000) + 10000).toString().substring(1);
-    const otp2 = "1234"; const subject = "verification";
+     const subject = "verification";
       const text = `you can verify your account with the otp ${otp}`;
-    sendEmail(email, otp2, id, subject, text);
+    sendEmail(email, otp, id, subject, text);
     console.log('resent');
     // return res.status(200).send(true);
 
@@ -382,9 +380,9 @@ module.exports.sendOtp = async (req,res,next)=>{
    
     if (otpVerificationRecords) { await otpVerification.deleteMany({ userId: id }); }
     const otp = (Math.floor(Math.random() * 10000) + 10000).toString().substring(1);
-    const otp2 = "1234"; const subject = "Reset Password";
+    const subject = "Reset Password";
       const text = `you can reset your password with the otp ${otp}`;
-    sendEmail(email, otp2, id, subject, text);
+    sendEmail(email, otp, id, subject, text);
     return res.status(200).send({user:user} );
 
        } catch (e) {

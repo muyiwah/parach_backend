@@ -45,7 +45,32 @@ await newOtpVerification.save();
 //     html:`<p> your otp is ${otp}</p>`
   
 // });
-  
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'parachcomputers@gmail.com',
+    pass: 'olse nlsq oqyu mbft'
+  },
+  tls: {
+  rejectUnauthorized: false
+}
+}); 
+
+var mailOptions = {
+  from: 'flutter4572@gmail.com',
+  to: 'muyiwah457@gmail.com',
+  subject: subject,
+  text: text,
+   html:`<p> your otp is ${otp}</p>`
+};
+
+transporter.sendMail(mailOptions, function(error, info){
+  if (error) {
+    console.log(error);
+  } else {
+    console.log('Email sent: ' + info.response);
+  }
+});
   } catch (error) {
   console.log(error); 
   }

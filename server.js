@@ -2,12 +2,21 @@ const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const { success, error } = require('consola')
+var admin = require("firebase-admin");
+
 const bodyParser = require('body-parser')
 const myRoute  = require('./route/route')
 require('dotenv').config()
 
 // initialize the application
 const app = express()
+
+
+var serviceAccount = require("./service_account.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -26,7 +35,7 @@ app.use((err, req, res, next) => {
 const db = "mongodb+srv://muyiwah457:pass@cluster0.kr7soid.mongodb.net/?retryWrites=true&w=majority";
 //connect to mongoDB
 mongoose
-  .connect(db, {   
+  .connect(process.env.LOCAL_DB, {   
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

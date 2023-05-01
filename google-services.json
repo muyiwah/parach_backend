@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "224912764760",
+    "project_id": "parach-cedcd",
+    "storage_bucket": "parach-cedcd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:224912764760:android:3eed37a8a4cebff9397f2d",
+        "android_client_info": {
+          "package_name": "com.parach.parachapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "224912764760-rgoqjdbbafo0jn789i9hanv8buhdrjln.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.parach.parachapp",
+            "certificate_hash": "7178eec7eeffae98b722872a18b9a48ac7d7d5ba"
+          }
+        },
+        {
+          "client_id": "224912764760-dd5g9b5s40gpl1ugbqd8c31jfrd1a9pl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtr3E61ouw_YxzHW3CKRUlJboxxVNUQMM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "224912764760-dd5g9b5s40gpl1ugbqd8c31jfrd1a9pl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
