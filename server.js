@@ -48,9 +48,9 @@ mongoose
 app.use('/api/v1', myRoute)
  
 // create server
-port = process.env.PORT
+// port = process.env.PORT
  
 app.listen(4000, () => {
-  success({ message: `server started on ${port}`, badge: true })
+  success({ message: `server started on `, badge: true })
 })
  
