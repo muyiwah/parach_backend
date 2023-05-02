@@ -45,7 +45,7 @@ mongoose
   .catch((err) => error({ message: 'Database connection failed', badge: true }))
 
 // api routes
-app.use('/api/v1', myRoute)
+app.use('/api/v1', myRoute) 
  
 // create server
 // port = process.env.PORT
