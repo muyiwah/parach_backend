@@ -69,7 +69,8 @@ module.exports.signIn = async (req, res, next) => {
               phoneNumber: user.phoneNumber,
               role: user.role, 
             },
-            process.env.JWT_SECRET,
+            // process.env.JWT_SECRET,
+            'samuelETo@1995_',
             { expiresIn: "12h" }, 
           );
           if (correctPassword) {
