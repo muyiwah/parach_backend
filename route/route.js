@@ -27,13 +27,20 @@ router.post('/signin-admin', adminSignin)
 router.post('/signin-super-admin', superAdminSignin)
 router.post('/update-admin',jwtVerify ,adminRole, updateAdmin)
 router.post('/list-users',jwtVerify ,adminRole ,listUsers)
-router.post('/list-admins',jwtVerify ,superAdminRole ,listAdmins)
+router.get('/list-admins',jwtVerify ,listAdmins)
 router.post('/list-super-admins',jwtVerify ,superAdminRole ,listSuperAdmins)
-router.post('/delete-user', jwtVerify ,adminRole, deleteUser)
+// router.post('/delete-user', jwtVerify ,adminRole, deleteUser)
+router.post('/upload-course', jwtVerify,uploadCourse)
+router.post('/upload-course-edited', jwtVerify, uploadCourseEdited)
+router.get('/admin-get-courses', jwtVerify, listCourses)
+router.get('/get-users',jwtVerify,  getUsers)
+router.post('/add-course', addCourse)
+
+router.delete('/delete-course/:courseId', jwtVerify, deleteCourse)
+router.delete('/delete-user/:userId', jwtVerify, deleteUser)
 
 
 // course route 
-router.post('/add-course', addCourse)
 // router.post('/add-course',jwtVerify ,adminRole, addCourse)
 router.get('/get-courses', listCourses)
 router.delete('/remove-from-cart/:courseId/:userEmail', deleteCart)

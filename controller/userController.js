@@ -70,7 +70,7 @@ module.exports.signIn = async (req, res, next) => {
               role: user.role, 
             },
             // process.env.JWT_SECRET,
-            'samuelETo@1995_',
+            process.env.JWT_SECRET,
             { expiresIn: "12h" }, 
           );
           if (correctPassword) {
