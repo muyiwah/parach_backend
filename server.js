@@ -50,7 +50,7 @@ app.use('/api/v1', myRoute)
 // create server
 // port = process.env.PORT
   
-app.listen(7000, () => {
+app.listen(7050, () => {
   success({ message: `server started on `, badge: true })
 })
  

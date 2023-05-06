@@ -1,5 +1,5 @@
 const express = require ('express');
-const { adminRegister, adminSignIn, updateAdmin, getUsers, deleteUser, superAdminRegister, superAdminSignin, listUsers, listAdmins, listSuperAdmins, adminSignin } = require('../controller/adminController');
+const { adminRegister, adminSignIn, updateAdmin, getUsers, deleteUser, superAdminRegister, superAdminSignin, listUsers, listAdmins, listSuperAdmins, adminSignin, uploadCourse, uploadCourseEdited, deleteCourse } = require('../controller/adminController');
 const { listCourses, addCourse, searchCourse } = require('../controller/courseController');
 const { payment } = require('../controller/paymentController');
 const { register, signIn, updateUser, resetPassword, forgotPassword, otp, verifyOtp, resetPasswordBeforeLogin, resendOtp, sendOtp, addToCart, deleteCart, registerPaidCouse } = require('../controller/userController');
@@ -43,9 +43,9 @@ router.delete('/delete-user/:userId', jwtVerify, deleteUser)
 // course route 
 // router.post('/add-course',jwtVerify ,adminRole, addCourse)
 router.get('/get-courses', listCourses)
-router.delete('/remove-from-cart/:courseId/:userEmail', deleteCart)
+router.delete('/remove-from-cart/:courseId/:userEmail', deleteCart)   
 router.get("/search", searchCourse)
-router.post("/add-to-cart", addToCart)
+router.post("/add-to-cart", addToCart) 
 router.post("/toggle-status",jwtVerify ,adminRole)
 
 // paystack route
