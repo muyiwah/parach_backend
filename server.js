@@ -35,7 +35,7 @@ app.use((err, req, res, next) => {
 const db = "mongodb+srv://muyiwah457:pass@cluster0.kr7soid.mongodb.net/?retryWrites=true&w=majority";
 //connect to mongoDB
 mongoose 
-  .connect("mongodb://localhost:27017/test2", {   
+  .connect(process.env.MONGODB, {   
     useNewUrlParser: true,
     useUnifiedTopology: true, 
   })
