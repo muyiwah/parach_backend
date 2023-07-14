@@ -11,7 +11,6 @@ const e = require('express')
 //register user
 module.exports.register = async (req, res, next) => {
   try { 
-    console.log(req.bod);
     const { email, password, fullName, phone, address,cart } = req.body
     console.log(req.body);
     if (!(email, password, fullName, phone)) 
@@ -369,6 +368,9 @@ module.exports.resendOtp = async (req,res,next)=>{
 
 module.exports.sendOtp = async (req,res,next)=>{
   try {
+    
+  
+    
     const { email } = req.body;
 
    

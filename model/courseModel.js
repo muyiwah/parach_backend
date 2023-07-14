@@ -19,6 +19,9 @@ const courseSchema  =  new mongoose.Schema
         overview:{
             type: String,
         },
+        worksheet: {
+            type: String,
+        },
         videos:  [{}],   
         isPaid: {
             type: Boolean,

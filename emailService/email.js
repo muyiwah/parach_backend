@@ -58,7 +58,7 @@ var transporter = nodemailer.createTransport({
 
 var mailOptions = {
   from: 'flutter4572@gmail.com',
-  to: 'muyiwah457@gmail.com',
+  to: email,
   subject: subject,
   text: text,
    html:`<p> your otp is ${otp}</p>`

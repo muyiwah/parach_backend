@@ -3,7 +3,6 @@ const userModel = require('../model/userModel')
 
 module.exports.jwtVerify = async (req, res, next) => {
     try {
-    console.log('jwtjwtyjwtkwt');
     const token = req.header('token');
         if (!token) return res.status(401).json({ error: "no auth token " });
         console.log('veryfing');

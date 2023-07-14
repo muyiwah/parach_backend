@@ -34,10 +34,10 @@ app.use((err, req, res, next) => {
 })
 const db = "mongodb+srv://muyiwah457:pass@cluster0.kr7soid.mongodb.net/?retryWrites=true&w=majority";
 //connect to mongoDB
-mongoose
-  .connect(process.env.MONGODB, {   
+mongoose 
+  .connect("mongodb://localhost:27017/test2", {   
     useNewUrlParser: true,
-    useUnifiedTopology: true,
+    useUnifiedTopology: true, 
   })
   .then((response) =>
     success({ message: 'Database connected successfully', badge: true }),
@@ -45,12 +45,12 @@ mongoose
   .catch((err) => error({ message: 'Database connection failed', badge: true }))
 
 // api routes
-app.use('/api/v1', myRoute) 
+app.use('/api/v1', myRoute)  
  
 // create server
-// port = process.env.PORT
-  
-app.listen(7050, () => {
-  success({ message: `server started on `, badge: true })
+port = process.env.PORT
+   
+app.listen(7000, () => {  
+  success({ message: `server started on `, badge: true }) 
 })
  

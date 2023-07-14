@@ -6,6 +6,9 @@ const { Course } = require('../model/courseModel')
 
 module.exports.adminRegister = async (req, res, next) => {
   const { fullName, email, password, phone, location } = req.body
+ 
+  
+ 
   try {
     if (!(fullName && email && password && phone && location)) {
       next(createError(400, 'fields input required '))
@@ -232,7 +235,7 @@ module.exports.listSuperAdmins = async (req, res, next) => {
 }; 
 
 module.exports.uploadCourseEdited = async (req, res, next) => {
-  const {id, duration, title,description,price,image,overview ,isPaid,videos} = req.body;
+  const {id, duration, title,description,price,image,overview, worksheet,isPaid,videos} = req.body;
   var newVideo = [];
   await Course.findByIdAndDelete(id);
 console.log(videos.length);
@@ -241,7 +244,7 @@ console.log(videos.length);
  newVideo.push(videos[i]); if (videos.length==i)break
   } console.log(newVideo); 
   try {
-  var course=Course({duration,description,title,description,price,image,overview,isPaid,videos:newVideo})
+  var course=Course({duration,description,title,description,price,image,worksheet,overview,isPaid,videos:newVideo})
     console.log(course);
        course = await course.save();
       res.status(200).json(course); 
@@ -252,14 +255,14 @@ console.log(videos.length);
   }
 }
 module.exports.uploadCourse = async (req, res, next) => {
-  const { duration, title,description,price,image,overview ,isPaid,videos} = req.body;
+  const { duration, title,description,price,image,overview,worksheet ,isPaid,videos} = req.body;
   var newVideo = [];
   for (let i = 0;  videos.length > i; i++) {
     // const newUrl = videos.replace(/\\-/g, '-');
  newVideo.push(JSON.parse( videos[i])); if (videos.length==i)break
   } console.log(newVideo); 
   try {
-  var course=Course({duration,description,title,description,price,image,overview,isPaid,videos:newVideo})
+  var course=Course({duration,description,title,description,price,image,worksheet,overview,isPaid,videos:newVideo})
     console.log(course);
        course = await course.save();
       res.status(200).json(course);
@@ -285,7 +288,21 @@ module.exports.deleteCourse = async (req, res, next) => {
     next(error)
   }
 }
-
+module.exports.deleteVideo = async (req, res, next) => {
+  try {
+   console.log(req.params);
+    const {  VideoId } = req.params;
+    console.log(VideoId);
+    
+    const course = await Course.findByIdAndDelete(VideoId);
+    const course2 = await Course.find();
+   
+    
+    res.status(200).json( course2);
+  } catch (error) {
+    next(error)
+  }
+}
 module.exports.deleteUser = async (req, res, next) => {
   try {
   //  console.log(req.params)/;
