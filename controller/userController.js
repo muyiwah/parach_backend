@@ -133,7 +133,6 @@ module.exports.addToCart = async (req, res, next) => {
       } 
       
       if(isFound==false) {
-        console.log('hyyyyyyyyyyyyyyyyy');  console.log(isFound);  
             user.cart.push( course );
           const user2 = await user.save();
            // console.log(userf2);  
