@@ -32,7 +32,7 @@ app.use((err, req, res, next) => {
     message,
   })
 })
-const db = "mongodb+srv://muyiwah457:pass@cluster0.kr7soid.mongodb.net/?retryWrites=true&w=majority";
+
 //connect to mongoDB
 mongoose 
   .connect(process.env.MONGODB, {   
