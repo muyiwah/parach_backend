@@ -48,8 +48,8 @@ await newOtpVerification.save();
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'parachcomputers@gmail.com',
-    pass: 'olse nlsq oqyu mbft'
+ 
+ 
   },
   tls: {
   rejectUnauthorized: false
